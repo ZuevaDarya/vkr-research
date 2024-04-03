@@ -97,7 +97,6 @@ export class Statistic {
   }
 
   getFPSMeanInIteration() {
-    console.log(this.fpsStats)
     const fpsIterationMean = this.fpsStats.map(fpsIteration => this.calculateMean(fpsIteration));
     return fpsIterationMean.map(fps => Math.round(Number(fps)));
   }

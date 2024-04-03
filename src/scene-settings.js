@@ -32,11 +32,10 @@ export function render() {
   }, 1000 / 120)
 
   renderer.render(scene, camera);
+  statistic.endFrame(gpuStats.ms);
 
   gpuStats.endQuery();
   stats.update()
-
-  statistic.endFrame(gpuStats.ms);
 }
 
 createDirectionalLight(scene);

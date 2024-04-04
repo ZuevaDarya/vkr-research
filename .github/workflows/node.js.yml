@@ -29,6 +29,16 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
+    - name: Setup-pages
+      id: pages
+      uses: actions/configure-pages@v3
+    - name: Build with jekyll
+      uses: actions/jekyll-build-pages@v1
+      with: 
+        source: ./
+        destination: ./_site
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v2
 
 
   push_to_registry:
@@ -58,3 +68,15 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  deploy_to_pages:
+    name: Upload Github pages
+    runs-on: ubuntu-latest
+    environment: 
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    steps:
+      - name: Deploy to Github pages
+        uses: actions/deploy-pages@v2
+      - run: npm deploy

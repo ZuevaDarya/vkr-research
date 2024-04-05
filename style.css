@@ -29,6 +29,11 @@ input {
 button:hover {
   background-color: rgb(133, 128, 162);
 }
+button:disabled {
+  background-color: rgb(78, 76, 91);
+  border-color: rgb(62, 60, 72);
+  color:rgb(0, 0, 0);
+}
 .wrapper {
   padding: 2px;
 }

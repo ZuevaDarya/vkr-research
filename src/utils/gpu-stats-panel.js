@@ -49,20 +49,21 @@ export class GPUStatsPanel extends Stats.Panel {
         if (isWebGL2) {
           available = gl.getQueryParameter(query, gl.QUERY_RESULT_AVAILABLE);
           disjoint = gl.getParameter(ext.GPU_DISJOINT_EXT);
-          ns = gl.getQueryParameter(query, gl.QUERY_RESULT);
         } else {
           available = ext.getQueryObjectEXT(query, ext.QUERY_RESULT_AVAILABLE_EXT);
           disjoint = gl.getParameter(ext.GPU_DISJOINT_EXT);
-          ns = ext.getQueryObjectEXT(query, ext.QUERY_RESULT_EXT);
         }
 
-        this.ms = ns * 1e-6;
-
-        if (available) {
-          // update the display if it is valid
-          if (!disjoint) {
-            this.update(this.ms, this.maxTime);
+        if (available && !disjoint) {
+          if (isWebGL2) {
+            ns = gl.getQueryParameter(query, gl.QUERY_RESULT);
+          } else {
+            ns = ext.getQueryObjectEXT(query, ext.QUERY_RESULT_EXT);
           }
+
+          this.ms = ns * 1e-6;
+          // update the display if it is valid
+          this.update(this.ms, this.maxTime);
 
           this.activeQueries--;
         } else {

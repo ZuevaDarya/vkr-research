@@ -4,7 +4,7 @@ import { scene } from './consts/scene';
 import { renderer } from './consts/renderer';
 import { camera } from './consts/camera';
 import { createDirectionalLight, createHemisphereLight } from './utils/create-lights';
-import { GPUStatsPanel } from './utils/gpu-stats-panel';
+import { GPUStatsPanel } from './utils/GPU-stats-panel';
 import { statistic } from './statistic';
 import resizeRenderer from './utils/resize-renderer';
 
@@ -24,18 +24,20 @@ stats.addPanel(gpuStats);
 stats.showPanel(0);
 
 export function render() {
+
   stats.begin();
-  gpuStats.startQuery();
 
   setTimeout(() => {
     requestAnimationFrame(render);
   }, 1000 / 120)
 
-  renderer.render(scene, camera);
-  statistic.endFrame(gpuStats.ms);
+  stats.update();
 
+  gpuStats.startQuery();
+  renderer.render(scene, camera);
   gpuStats.endQuery();
-  stats.update()
+
+  statistic.endFrame(gpuStats.ms);
 }
 
 createDirectionalLight(scene);

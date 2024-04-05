@@ -8,7 +8,7 @@ describe('should render correctly', () => {
 
   it('should contain setting button element', () => {
     expect(document.querySelector('#startTest')).toBeTruthy();
-
+    expect(document.querySelector('#stopTest')).toBeTruthy();
   });
 
   it('should contain setting input element', () => {

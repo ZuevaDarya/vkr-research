@@ -24,11 +24,13 @@ const testMessage = document.querySelector('#message');
 const optimizationCheckbox = document.querySelector('#optimizationCheckbox');
 const clearResultsBtn = document.querySelector('#clearResultsBtn');
 const exportTableBtn = document.querySelector('#exportTableBtn');
+const stopTestBtn = document.querySelector('#stopTest');
 
 let arrIds = [];
 let needShow = true;
 let isOptimizated = false;
 let isAnimate = false;
+let canceled = false;
 
 function clearScene() {
   let children = scene.children;
@@ -60,19 +62,24 @@ function addObjects() {
   let time = 0;
   let message = '';
 
+  if (numObj === 0) {
+    alert('Введите количество генерируемых объектов!');
+    return;
+  }
+
   if (!animationCheckbox.checked) {
     isAnimate = false;
 
     if (!optimizationCheckbox.checked) {
       time = generateBox(numObj, scene);
       writeStatisticData(statistic, time, numObj);
-      
+
       message = `добавить объекты (${numObj}) без оптимизации`;
       isOptimizated = false;
     } else {
       time = generateOptimizatedBox(numObj, scene);
       writeStatisticData(statistic, time, numObj);
-    
+
       message = `добавить объекты (${numObj}) с оптимизацией`;
       isOptimizated = true;
     }
@@ -107,12 +114,32 @@ function addObjects() {
 
 async function startTest() {
   needShow = false;
+  canceled = false;
   statistic.resetStatisticState();
 
   const numIteration = Number(numIterationInput.value);
+  const numObj = Number(numObjectsInput.value);
+
+  if (numIteration === 0) {
+    alert('Введите количество итераций тестов!');
+    return;
+  } 
+
+  if (numObj === 0) {
+    alert('Введите количество генерируемых объектов!');
+    return;
+  }
+
   let message = '';
 
   for (let i = 0; i < numIteration; i++) {
+    if (canceled) {
+      return;
+    }
+
+    startTestBtn.setAttribute('disabled', 'disabled');
+    addObjectsBtn.setAttribute('disabled', 'disabled');
+    clearBtn.setAttribute('disabled', 'disabled');
     addTextAndClass(testMessage, `выполняются тесты, итерация ${i + 1} из ${numIteration}`);
     message = addObjects();
     statistic.setIterationNum(i);
@@ -120,6 +147,9 @@ async function startTest() {
   }
 
   addTextAndClass(testMessage, 'тесты выполнены успешно', 'message_success');
+  startTestBtn.removeAttribute('disabled');
+  addObjectsBtn.removeAttribute('disabled');
+  clearBtn.removeAttribute('disabled');
 
   const mean = statistic.getMeanCodeExecutionTime();
   const fpsMean = statistic.getMeanFPS();
@@ -131,6 +161,16 @@ async function startTest() {
   showResults(`${gpuMessage} (среднее)`, gpuMean, 'ms');
 
   needShow = true;
+}
+
+function stopTest() {
+  canceled = true;
+
+  statistic.resetStatisticState();
+  addTextAndClass(testMessage, 'тесты остановлены, статистика не собрана');
+  startTestBtn.removeAttribute('disabled');
+  addObjectsBtn.removeAttribute('disabled');
+  clearBtn.removeAttribute('disabled');
 }
 
 clearBtn.addEventListener('click', () => {
@@ -147,5 +187,5 @@ clearResultsBtn.addEventListener('click', () => {
   statistic.resetStatisticState();
 });
 exportTableBtn.addEventListener('click', () => exportCSV(statistic, isOptimizated, isAnimate));
-
+stopTestBtn.addEventListener('click', () => stopTest());
 

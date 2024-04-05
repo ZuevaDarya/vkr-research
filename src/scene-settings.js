@@ -4,7 +4,7 @@ import { scene } from './consts/scene';
 import { renderer } from './consts/renderer';
 import { camera } from './consts/camera';
 import { createDirectionalLight, createHemisphereLight } from './utils/create-lights';
-import { GPUStatsPanel } from './utils/GPU-stats-panel';
+import { GPUStatsPanel } from './utils/gpu-stats-panel';
 import { statistic } from './statistic';
 import resizeRenderer from './utils/resize-renderer';
 

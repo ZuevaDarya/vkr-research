@@ -1,5 +1,6 @@
-export default function showResults(label, data, type = '') {
+export default function showResults(label, data = null, type = '') {
   const resultsBlock = document.getElementById('results');
+  let span = '';
   let dataToNum = 0;
 
   if (type === 'ms') {
@@ -8,11 +9,19 @@ export default function showResults(label, data, type = '') {
     dataToNum = Math.round(Number(data));
   }
 
-  const span = `
+  if (data !== null) {
+    span = `
+      <p class="results__result">
+        <span class="results__label">${label}:</span><br> ${dataToNum} ${type}
+      </p>
+    `;
+  } else {
+    span = `
     <p class="results__result">
-      <span class="results__label">${label}:</span><br> ${dataToNum} ${type}
+      <span class="results__label">${label}</span><br>
     </p>
   `;
+  }
 
   resultsBlock.innerHTML += span;
 }

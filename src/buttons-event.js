@@ -13,6 +13,7 @@ import addTextAndClass from './utils/add-text-and-class';
 import exportCSV from './utils/export-csv';
 import writeStatisticData from './utils/write-statistic-data';
 import getTestMessage from './utils/get-test-message';
+import { gpuStats } from './scene-settings';
 
 const addObjectsBtn = document.querySelector('#addObjectsBtn');
 const numObjectsInput = document.querySelector('#numObjectsInput');
@@ -123,7 +124,7 @@ async function startTest() {
   if (numIteration === 0) {
     alert('Введите количество итераций тестов!');
     return;
-  } 
+  }
 
   if (numObj === 0) {
     alert('Введите количество генерируемых объектов!');
@@ -158,7 +159,13 @@ async function startTest() {
 
   showResults(`${message} (среднее время)`, mean, 'ms');
   showResults(`${fpsMessage} (среднее)`, fpsMean, 'кадр/сек');
-  showResults(`${gpuMessage} (среднее)`, gpuMean, 'ms');
+
+  console.log(gpuStats.messageError)
+  if (gpuStats.messageError) {
+    showResults(gpuStats.messageError);
+  } else {
+    showResults(`${gpuMessage} (среднее)`, gpuMean, 'ms');
+  }
 
   needShow = true;
 }

@@ -19,7 +19,7 @@ const context = renderer.getContext();
 const stats = new Stats(context);
 document.body.appendChild(stats.domElement);
 
-const gpuStats = new GPUStatsPanel(context);
+export const gpuStats = new GPUStatsPanel(context);
 stats.addPanel(gpuStats);
 stats.showPanel(0);
 

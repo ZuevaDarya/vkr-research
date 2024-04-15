@@ -11,6 +11,7 @@ export class GPUStatsPanel extends Stats.Panel {
       isWebGL2 = false;
       extension = context.getExtension('EXT_disjoint_timer_query');
       if (extension === null) {
+        this.messageError = 'GPU: расширение disjoint_time_query не поддерживается';
         console.warn('GPUStatsPanel: disjoint_time_query extension not available.');
       }
     }
